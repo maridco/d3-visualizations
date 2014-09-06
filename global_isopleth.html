@@ -23,24 +23,25 @@
   display: none; 
 }
 div.tooltip {
+  font-family:Helvetica;
   color: #222; 
   background: #fff; 
-  padding: .5em; 
+  padding: .4em; 
   text-shadow: #f5f5f5 0 1px 0;
   border-radius: 2px; 
   box-shadow: 0px 0px 2px 0px #a6a6a6; 
-  opacity: 0.9; 
+  opacity: 0.8; 
   position: absolute;
 }
-.graticule {
+/*.graticule {
   fill: none;
   stroke: #bbb;
   stroke-width: .5px;
   stroke-opacity: .5;
-}
+}*/
 .equator {
   stroke: #ccc;
-  stroke-width: 1px;
+  stroke-width: .5px;
 }
 
 </style>
@@ -137,10 +138,10 @@ function draw(topo) {
       }); 
 
 
-  d3.csv("data/country-capitals.csv", function(err, capitals) {
+  d3.csv("data/performers.csv", function(err, artists) {
 
-    capitals.forEach(function(i){
-      addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
+    artists.forEach(function(i){
+      addpoint(i.PerformerLongitude, i.PerformerLatitude, i.PerformerName);
     });
 
   });
