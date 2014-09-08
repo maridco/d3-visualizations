@@ -1,8 +1,7 @@
 ![](https://raw.githubusercontent.com/maridco/marid/master/app/assets/images/Marid_Logo_web.png?token=5732914__eyJzY29wZSI6IlJhd0Jsb2I6bWFyaWRjby9tYXJpZC9tYXN0ZXIvYXBwL2Fzc2V0cy9pbWFnZXMvTWFyaWRfTG9nb193ZWIucG5nIiwiZXhwaXJlcyI6MTQxMDc2NDMwN30%3D--7e89fade8d826686ef610de4a0bc76f7485f738d)
 
 
-D3.js Visualizations
-=============
+### D3.js Visualizations
 
 A collection of Marid's D3.js visualizations
 
