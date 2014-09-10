@@ -3,15 +3,6 @@
 	<meta charset="utf-8">
 	<title>World 2</title>
 	<style>
-	.country:hover{
-	  stroke: #fff;
-	  stroke-width: 1.5px;
-	}
-	.text{
-	  font-family:Helvetica;
-	  font-size:10px;
-	  text-transform:capitalize;
-	}
 	#container {
 	  margin:10px 10%;
 	  border:2px solid #000;
@@ -20,41 +11,88 @@
 	  overflow:hidden;
 	  background: #F0F8FF;
 	}
-	.hidden { 
-	  display: none; 
-	}
-	div.tooltip {
-	  color: #222; 
-	  background: #fff; 
-	  padding: .5em; 
-	  text-shadow: #f5f5f5 0 1px 0;
-	  border-radius: 2px; 
-	  box-shadow: 0px 0px 2px 0px #a6a6a6; 
-	  opacity: 0.9; 
-	  position: absolute;
-	}
+	.country:hover{
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
 	.graticule {
-	  fill: none;
-	  stroke: #bbb;
-	  stroke-width: .5px;
-	  stroke-opacity: .5;
+		fill: none;
+		stroke: #CCC;
+		stroke-width: .5,
+		stroke-opacity: .5
+	}
+	.text {
+		font: 9px/1.1 sans-serif;
 	}
 	.equator {
-	  stroke: #ccc;
-	  stroke-width: 1px;
+		stroke: #555;
+		stroke-width: 1;
 	}
 	
 	</style>
 	<script type="text/javascript" src="js/d3.min.js"></script>
 	<script type="text/javascript" src="js/topojson.js"></script>
+	<script type="text/javascript" src="js/tooltip.js"></script>
 	<script type="text/javascript" src="js/reusableWorldMap.js"></script>
 </head>
 <body>
-  <div id="container"></div>
+	<div id="markus"><a href="#" onClick="javascript:test();">test</a></div>
+	<div id="container"></div>
 </body>
 <script>
 	var mapChart = new reusableWorldMap('container');
+	mapChart.setTopoUrl('data/world-topo-min.json')
+		.setTooltipFunction(function(d, i) {
+			return d.properties.name;
+		})
+		.initChart();
+		
+	//mapChart.foo();
+	
+	function test() {
+	
+		var dat = [{
+			country: 'United States',
+			rating: 100
+		}, {
+			country: 'Canada',
+			rating: 70
+		}, {
+			country: 'Finland',
+			rating: 85
+		}, {
+			country: 'Japan',
+			rating: 35
+		}];
+		
+		var opacityScale = d3.scale.linear()
+			.domain([
+				d3.min(dat, function(d) { return d.rating;}),
+				d3.max(dat, function(d) { return d.rating;})
+			])
+			.range([.5, 1]);
+			
+		var map = dat.map(function(d) { return d.country; });
+		
+		var sel = mapChart.g.selectAll('.country');
+		
+		sel.filter(function(e, j) {
+				return map.indexOf(e.properties.name) >= 0;
+			})
+			.style('fill', '#0000FF')
+			.style('opacity', function(d) {
+				return Math.random();
+			
+			
+			});
+			
+		sel.filter(function(e, j) {
+				return map.indexOf(e.properties.name) < 0;
+			})
+			.style('fill', mapChart.defaults.fill);
 
-
+			
+	}
+		
 </script>
 </html>

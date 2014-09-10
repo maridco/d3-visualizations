@@ -1,56 +1,210 @@
 var reusableWorldMap = function(targetContainer) {
 
 	var me = this;
-	
-	me.svg = undefined;
-	me.path = undefined;
 
  	me.canvasHeight = Math.floor(document.getElementById(targetContainer).offsetWidth / 2),
- 	me.canvasWidth = document.getElementById(targetContainer).offsetWidth,
- 	me.graticule = d3.geo.graticule(),
- 	me.path = undefined,
- 	me.projection = undefined,
- 	me.topo = undefined,
- 	me.zoom = d3.behavior.zoom().scaleExtent([1, 9]).on('zoom', me.zzz);
-	 	
-	 	
-	me.zzz = function() {
-		console.log('zooming');
-	}
-	
-	me.click = function() {
-		alert('click');
-	}
-	
-	
- 	
- 	
-	
-	me.setup = function() {
+	me.canvasWidth = document.getElementById(targetContainer).offsetWidth,
+	me.chartInitialized = false,
+	me.defaults = {
+		fill: '#CCCCCC'
+	},
+	me.graticule = d3.geo.graticule(),
+	me.path,
+	me.projection,
+	me.svg,
+	me.tooltipFunction = function(d, i) { return 'tooltip'; },
+	me.topo,
+	me.topoUrl,
+	me.zoom = d3.behavior.zoom().scaleExtent([1, 9]).on('zoom', function() {
+	 	console.log('zooming');
+	});
+		
+	/**
+ 	 * @function
+ 	 * @description Initialize chart components and draw
+ 	 * base map / paths
+ 	 */
+	me.initChart = function() {
 		me.projection = d3.geo.mercator()
 			.translate([me.canvasWidth/2, me.canvasHeight/2])
 			.scale(me.canvasWidth / 2 / Math.PI);
 		
 		me.path = d3.geo.path().projection(me.projection);
-		
+
 		me.svg = d3.select('#' + targetContainer)
 			.append('svg')
 			.attr('width', me.canvasWidth)
-			.attr('height', me.canvasHeight)
-			.call(me.zoom)
-			.on('click', me.click);
+			.attr('height', me.canvasHeight);
+			//.call(me.zoom);
+			//.on('click', me.click);
 		
 		me.g = me.svg.append('svg:g');
+		
+		d3.json(me.topoUrl, function(err, dat) {
+			if(err) { console.warn(err); return; }
+			
+			me.topo = topojson.feature(dat, dat.objects.countries).features;
+			me.chartInitialized = true;
+			me.renderMap();
+		}, me);
 	}
 	
-me.setup();
+	/**
+ 	 * @function
+ 	 * @description Render the basic map paths
+ 	 */
+	me.renderMap = function() {
+		
+		me.g.append('path')
+			.datum(me.graticule)
+			.attr('class', 'graticule')
+			.attr('d', me.path);
+			
+		me.g.append('path')
+			.datum({
+				type: 'LineString',
+				coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]
+			})
+			.attr('class', 'equator')
+			.attr('d', me.path);
+			
+		var countrySelection = me.g.selectAll('.country')
+			.data(me.topo);
+		
+		countrySelection.enter()
+			.append('path')
+			.attr('class', 'country')
+			.attr('d', me.path)
+			.attr('id', function(d, i) {
+				return d.id;
+			})
+			.style('fill', function(d, i) {
+				return me.defaults.fill;
+			});
+		
+		countrySelection.call(d3.helper.tooltip().text(me.tooltipFunction));
+	}
+	
+	me.foo = function() {
+		var arr = ['United States', 'Canada', 'Mexico', 'Finland', 'Australia', 'Japan'];
+	
+	
+	
+	
+	
+	
+	
+		
+		var sel = me.g.selectAll('.country');
+		
+		sel.filter(function(e, j) {
+				return arr.indexOf(e.properties.name) >= 0;
+			})
+			.style('fill', '#0000FF')
+			.style('opacity', .8);
+			
+		sel.filter(function(e, j) {
+				return arr.indexOf(e.properties.name) < 0;
+			})
+			.style('fill', me.defaults.fill);
+
+	
+	
+	
+	}
+	
+	me.bar = function() {
+		var arr = ['Cuba', 'Haiti', 'Norway', 'France', 'Spain'];
+	
+	
+	
+	
+	
+	
+	
+		
+		var sel = me.g.selectAll('.country');
+		
+		sel.filter(function(e, j) {
+				return arr.indexOf(e.properties.name) >= 0;
+			})
+			.style('fill', '#FFCC33');
+			
+		sel.filter(function(e, j) {
+				return arr.indexOf(e.properties.name) < 0;
+			})
+			.style('fill', me.defaults.fill);
+
+	
+	
+	
+	}
+	
+	/******************************
+	 *
+	 * SETTERS
+	 *
+	 *
+	 ******************************/
+	me.setTooltipFunction = function(fn) {
+		me.tooltipFunction = fn;
+		return me;
+	}
+	
+	me.setTopoUrl = function(url) {
+		me.topoUrl = url;
+		return me;
+	}
+	
+
+			
+			
+	//me.g.call(me.tip);
+
+ /* var offsetL = document.getElementById('container').offsetLeft+20;
+  var offsetT = document.getElementById('container').offsetTop+10;
+
+  country
+    .on("mousemove", function(d,i) {
+
+      var mouse = d3.mouse(me.svg.node()).map( function(d) { return parseInt(d); } );
+
+      tooltip.classed("hidden", false)
+             .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+             .html(d.properties.name);
+
+      })
+      .on("mouseout",  function(d,i) {
+        tooltip.classed("hidden", true);
+      }); 
 
 
-d3.json("data/world-topo-min.json", function(error, world) {
+  d3.csv("data/country-capitals.csv", function(err, capitals) {
+
+    capitals.forEach(function(i){
+      addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
+    });
+
+  });*/
+
+	
+
+	
+	/**
+ 	 * @function
+ 	 * @description Initialize chart components
+ 	 */
+	
+	
+
+
+/*d3.json("data/world-topo-min.json", function(error, world) {
 
   var countries = topojson.feature(world, world.objects.countries).features;
 
   topo = countries;
+  
+  console.debug(topo);
   me.draw(topo);
 
 }, me);
@@ -80,7 +234,7 @@ me.draw = function(topo) {
   var offsetL = document.getElementById('container').offsetLeft+20;
   var offsetT = document.getElementById('container').offsetTop+10;
 
-  /*country
+  country
     .on("mousemove", function(d,i) {
 
       var mouse = d3.mouse(me.svg.node()).map( function(d) { return parseInt(d); } );
@@ -92,7 +246,7 @@ me.draw = function(topo) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true);
-      }); */
+      }); 
 
 
   d3.csv("data/country-capitals.csv", function(err, capitals) {
@@ -103,10 +257,10 @@ me.draw = function(topo) {
 
   });
 
-}
+}*/
 
 
-me.redraw = function() {
+/*me.redraw = function() {
   width = document.getElementById('container').offsetWidth;
   height = width / 2;
   d3.select('svg').remove();
@@ -138,7 +292,7 @@ me.move = function() {
 
   d3.selectAll(".country").style("stroke-width", 1.5 / s);
 
-}
+}*/
 
 
 
@@ -157,7 +311,7 @@ function throttle() {
 }*/
 
 
-function addpoint(lat,lon,text) {
+/*function addpoint(lat,lon,text) {
 
   var gpoint = me.g.append("g").attr("class", "gpoint");
   var x = me.projection([lat,lon])[0];
@@ -178,7 +332,7 @@ function addpoint(lat,lon,text) {
           .text(text);
   }
 
-}
+}*/
 
 /* var tip = d3.tip()
         .attr('class', 'd3-tip')
