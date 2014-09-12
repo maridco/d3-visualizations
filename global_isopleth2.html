@@ -3,6 +3,23 @@
 	<meta charset="utf-8">
 	<title>World 2</title>
 	<style>
+	body  {
+    	margin: 0; 
+		padding: 0;
+		text-align: center;
+	}
+	
+	.active {
+		fill: none;
+	}
+	
+	#controls {
+		margin: 0 auto;
+		clear: both;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
 	#container {
 	  margin:10px 10%;
 	  border:2px solid #000;
@@ -11,16 +28,14 @@
 	  overflow:hidden;
 	  background: #F0F8FF;
 	}
-	.country:hover{
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
+	
 	.graticule {
 		fill: none;
 		stroke: #CCC;
 		stroke-width: .5,
 		stroke-opacity: .5
 	}
+	
 	.text {
 		font: 9px/1.1 sans-serif;
 	}
@@ -29,6 +44,41 @@
 		stroke-width: 1;
 	}
 	
+	.myButton {
+		background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #007dc1), color-stop(1, #0061a7));
+		background:-moz-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+		background:-webkit-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+		background:-o-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+		background:-ms-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+		background:linear-gradient(to bottom, #007dc1 5%, #0061a7 100%);
+		background-color:#007dc1;
+		-moz-border-radius:6px;
+		-webkit-border-radius:6px;
+		border-radius:6px;
+		border:2px solid #124d77;
+		display:inline-block;
+		cursor:pointer;
+		color:#ffffff;
+		font-family:Trebuchet MS;
+		font-size:13px;
+		padding:4px 25px;
+		text-decoration:none;
+		text-shadow:0px 1px 0px #154682;
+	}
+	.myButton:hover {
+		background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0061a7), color-stop(1, #007dc1));
+		background:-moz-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+		background:-webkit-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+		background:-o-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+		background:-ms-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+		background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0061a7', endColorstr='#007dc1',GradientType=0);
+		background-color:#0061a7;
+	}
+	.myButton:active {
+		position:relative;
+		top:1px;
+	}
 	</style>
 	<script type="text/javascript" src="js/d3.min.js"></script>
 	<script type="text/javascript" src="js/topojson.js"></script>
@@ -36,20 +86,24 @@
 	<script type="text/javascript" src="js/reusableWorldMap.js"></script>
 </head>
 <body>
-	<div id="markus"><a href="#" onClick="javascript:test();">test</a></div>
+	<div id="controls">
+		<a href="#" class="myButton" onClick="javascript:popularity();">Popularity</a>
+		<a href="#" class="myButton" onClick="javascript:sales();">Sales</a>
+	</div>
 	<div id="container"></div>
 </body>
 <script>
+	/**
+ 	 * initialize map
+ 	 */
 	var mapChart = new reusableWorldMap('container');
 	mapChart.setTopoUrl('data/world-topo-min.json')
 		.setTooltipFunction(function(d, i) {
 			return d.properties.name;
 		})
 		.initChart();
-		
-	//mapChart.foo();
 	
-	function test() {
+	function popularity() {
 	
 		var dat = [{
 			country: 'United States',
@@ -63,6 +117,12 @@
 		}, {
 			country: 'Japan',
 			rating: 35
+		}, {
+			country: 'Brazil',
+			rating: 55
+		}, {
+			country: 'Russian Federation',
+			rating: 90
 		}];
 		
 		var opacityScale = d3.scale.linear()
@@ -70,28 +130,84 @@
 				d3.min(dat, function(d) { return d.rating;}),
 				d3.max(dat, function(d) { return d.rating;})
 			])
-			.range([.5, 1]);
+			.range([.2, 1]);
 			
 		var map = dat.map(function(d) { return d.country; });
 		
-		var sel = mapChart.g.selectAll('.country');
+		var countrySelection = mapChart.g.selectAll('.country');
 		
-		sel.filter(function(e, j) {
-				return map.indexOf(e.properties.name) >= 0;
-			})
-			.style('fill', '#0000FF')
-			.style('opacity', function(d) {
-				return Math.random();
+		// countries to highlight
+		countrySelection.filter(function(e, j) {
+			return map.indexOf(e.properties.name) >= 0;
+		})
+		.transition()
+		.duration(250)
+		.style('fill', '#000099')
+		.style('opacity', function(d, i) {
+			var op;
 			
-			
+			var rating = dat.forEach(function(item) {
+				if(item.country == d.properties.name) {
+					op = opacityScale(item.rating);
+				}
 			});
 			
-		sel.filter(function(e, j) {
-				return map.indexOf(e.properties.name) < 0;
-			})
-			.style('fill', mapChart.defaults.fill);
-
+			return op || .2;
+		});
+		
+		// countries to reset
+		countrySelection.filter(function(e, j) {
+			return map.indexOf(e.properties.name) < 0;
+		})
+		.style('fill', mapChart.defaults.country.fill)
+		.style('opacity', 1);
+	}
+	
+	function sales() {
+		var dat = [
+			{country: 'Colombia', sales: 800000},
+			{country: 'Ukraine', sales: 900000},
+			{country: 'United States', sales: 1500000},
+			{country: 'Spain', sales: 500000},
+			{country: 'Germany', sales: 1000000}
+		];
+		
+		var opacityScale = d3.scale.linear()
+			.domain([
+				d3.min(dat, function(d) { return d.sales;}),
+				d3.max(dat, function(d) { return d.sales;})
+			])
+			.range([.2, 1]);
 			
+		var map = dat.map(function(d) { return d.country; });
+		
+		var countrySelection = mapChart.g.selectAll('.country');
+		
+		// countries to highlight
+		countrySelection.filter(function(e, j) {
+			return map.indexOf(e.properties.name) >= 0;
+		})
+		.transition()
+		.duration(250)
+		.style('fill', '#CC3300')
+		.style('opacity', function(d, i) {
+			var op;
+			
+			var rating = dat.forEach(function(item) {
+				if(item.country == d.properties.name) {
+					op = opacityScale(item.sales);
+				}
+			});
+			
+			return op || .2;
+		});
+		
+		// countries to reset
+		countrySelection.filter(function(e, j) {
+			return map.indexOf(e.properties.name) < 0;
+		})
+		.style('fill', mapChart.defaults.country.fill)
+		.style('opacity', 1);
 	}
 		
 </script>
