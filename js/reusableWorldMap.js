@@ -50,33 +50,11 @@ var reusableWorldMap = function(targetContainer) {
 			me.renderMap();
 		}, me);
 		
-		
 		me.zoom = d3.behavior.zoom()
-    .scaleExtent([1, 9])
-    .on("zoom", me.zoomHandler);
-	    me.svg.call(me.zoom);
-    
-		/*me.drag = d3.behavior.drag()
-		
-			.on("dragstart", function() {
-          var proj = me.projection.rotate();
-          m0 = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY];
-          o0 = [-proj[0],-proj[1]];
-        })
-       .on("drag", function() {
-         if (m0) {
-           var m1 = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY],
-               o1 = [o0[0] + (m0[0] - m1[0]) / 4, o0[1] + (m1[1] - m0[1]) / 4];
-           me.projection.rotate([-o1[0], -o1[1]]);
-         }
-        
-
-      // Update the map
-        path = d3.geo.path().projection(me.projection);
-        d3.selectAll("path").attr("d", path);
-        });
+			.scaleExtent([1, 9])
+			.on('zoom', me.zoomHandler);
 			
-		me.svg.call(me.drag);*/
+		me.svg.call(me.zoom);
 	}
 	
 	/**
@@ -164,28 +142,27 @@ var reusableWorldMap = function(targetContainer) {
 	}
 	
 	me.zoomHandler = function() {
-		console.log('zooming...');
+		console.log('zoom/pan...');
 		
-		var t = d3.event.translate;
-  var s = d3.event.scale; 
-  zscale = s;
-  var h = me.canvasHeight/4;
-  var width = me.canvasWidth;
-	var height = me.canvasHeight;
-
-
-  t[0] = Math.min(
-    (width/height)  * (s - 1), 
-    Math.max( width * (1 - s), t[0] )
-  );
-
-  t[1] = Math.min(
-    h * (s - 1) + h * s, 
-    Math.max(height  * (1 - s) - h * s, t[1])
-  );
-
-  me.zoom.translate(t);
-	me.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+		var t = d3.event.translate,
+			s = d3.event.scale,
+			zscale = s,
+			h = Math.floor(me.canvasHeight/4),
+			width = me.canvasWidth,
+			height = me.canvasHeight;
+		
+		t[0] = Math.min(
+			(width/height) * (s - 1), 
+			Math.max(width * (1-s), t[0])
+		);
+		t[1] = Math.min(
+			h * (s-1) + h * s,
+			Math.max(height  * (1-s) - h * s, t[1])
+		);
+		
+		me.zoom.translate(t);
+		
+		me.g.attr('transform', 'translate(' + t  + ')scale(' + s + ')');
 	}
 
 	/******************************
