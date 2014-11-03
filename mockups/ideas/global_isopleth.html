@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>World</title>
+<title>World (1)</title>
 <style>
 .country:hover{
   stroke: #fff;
@@ -50,8 +50,8 @@ div.tooltip {
 
   <div id="container"></div>
 
-<script src="js/d3.min.js"></script>
-<script src="js/topojson.js"></script>
+<script src="../../resources/js/d3.min.js"></script>
+<script src="../../resources/js/topojson.js"></script>
 <script>
 
 d3.select(window).on("resize", throttle);
@@ -89,7 +89,7 @@ function setup(width,height){
 
 }
 
-d3.json("data/world-topo-min.json", function(error, world) {
+d3.json("../../resources/data/world-topo-min.json", function(error, world) {
 
   var countries = topojson.feature(world, world.objects.countries).features;
 
@@ -138,7 +138,7 @@ function draw(topo) {
       }); 
 
 
-  d3.csv("data/performers.csv", function(err, artists) {
+  d3.csv("../../resources/data/performers.csv", function(err, artists) {
 
     artists.forEach(function(i){
       addpoint(i.PerformerLongitude, i.PerformerLatitude, i.PerformerName);

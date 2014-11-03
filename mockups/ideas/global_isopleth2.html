@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<title>World 2</title>
+	<title>World (2)</title>
 	<style>
 	body  {
     	margin: 0; 
@@ -80,10 +80,10 @@
 		top:1px;
 	}
 	</style>
-	<script type="text/javascript" src="js/d3.min.js"></script>
-	<script type="text/javascript" src="js/topojson.js"></script>
-	<script type="text/javascript" src="js/tooltip.js"></script>
-	<script type="text/javascript" src="js/reusableWorldMap.js"></script>
+	<script type="text/javascript" src="../../resources/js/d3.min.js"></script>
+	<script type="text/javascript" src="../../resources/js/topojson.js"></script>
+	<script type="text/javascript" src="../../resources/js/tooltip.js"></script>
+	<script type="text/javascript" src="../../resources/js/reusableWorldMap.js"></script>
 </head>
 <body>
 	<div id="controls">
@@ -97,7 +97,7 @@
  	 * initialize map
  	 */
 	var mapChart = new reusableWorldMap('container');
-	mapChart.setTopoUrl('data/world-topo-min.json')
+	mapChart.setTopoUrl('../../resources/data/world-topo-min.json')
 		.setTooltipFunction(function(d, i) {
 			return d.properties.name;
 		})
