@@ -1,0 +1,23 @@
+/**
+ * bootstrap overrides
+ */
+.navbar-default-vidual {
+	border-color: #A7A7A7;
+}
+
+.nav-pill-orange > li > a {
+	color: black;
+}
+
+.nav-pill-orange > li > a:hover {
+	background-color: #FF8C00;
+}
+
+.nav-pill-orange > li.active > a, .nav-pill-orange > li.active > a:hover, .nav-pill-orange > li.active > a:focus {
+    color: #FFF;
+    background-color: #FF8C00;
+}
+
+.nav-pill-orange > li.active > a:hover {
+	color: black;
+}
