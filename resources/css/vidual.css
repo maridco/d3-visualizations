@@ -5,22 +5,44 @@ body {
   padding-top: 50px;
 }
 
-.navbar-default-vidual {
+#vidualMap {
+	border: solid 1px #A7A7A7;
+	border-radius: 3px;
+	width: 97%;
+}
+
+.btn-default .badge {
+	background-color: #906;
+}
+
+.form-group label {
+	color: #990066;
+}
+
+.navbar-vidual-primary {
 	border-color: #A7A7A7;
+	background-color: #DDDDDD;
 }
 
-/** left nav links **/
-#navbarCollapse.collapse.navbar-collapse ul.nav.navbar-nav li a:hover {
-	border-radius: 4px;
-	background-color: #EEEEEE;
-	color: #FF8C00;
+.navbar-vidual-secondary {
+	background-color: white;
+	border: 0px;
+	font-size: 12px;
 }
 
-/** right nav links **/
-#navbarCollapse.collapse.navbar-collapse ul.nav.navbar-nav.navbar-right li a:hover {
-	background-color:#FF8C00;
-	border-radius: 4px;
+.navbar-default .navbar-nav > li > a {
+	color: #555;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	background-color: #FF8C00;
 	color: white;
+	border-radius: 4px;
 }
 
+.panel-search-results {
+	margin-top: 10px;
+}
 
+.panel-search-results .panel-title {
+	font-weight: bold;
