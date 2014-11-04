@@ -1,23 +1,26 @@
 /**
  * bootstrap overrides
  */
+body {
+  padding-top: 50px;
+}
+
 .navbar-default-vidual {
 	border-color: #A7A7A7;
 }
 
-.nav-pill-orange > li > a {
-	color: black;
+/** left nav links **/
+#navbarCollapse.collapse.navbar-collapse ul.nav.navbar-nav li a:hover {
+	border-radius: 4px;
+	background-color: #EEEEEE;
+	color: #FF8C00;
 }
 
-.nav-pill-orange > li > a:hover {
-	background-color: #FF8C00;
+/** right nav links **/
+#navbarCollapse.collapse.navbar-collapse ul.nav.navbar-nav.navbar-right li a:hover {
+	background-color:#FF8C00;
+	border-radius: 4px;
+	color: white;
 }
 
-.nav-pill-orange > li.active > a, .nav-pill-orange > li.active > a:hover, .nav-pill-orange > li.active > a:focus {
-    color: #FFF;
-    background-color: #FF8C00;
-}
 
-.nav-pill-orange > li.active > a:hover {
-	color: black;
-}
