@@ -9,7 +9,7 @@ var zoomingWorldMap = function(targetContainer) {
 	me.chartInitialized = false,
 	me.defaults = {
 		country: {
-			fill: '#E6F5EB',
+			fill: '#ECEECE',
 			fillActive: '#FF8C00',
 			stroke: '#A7A7A7',
 			strokeWidth: 1
@@ -95,13 +95,9 @@ var zoomingWorldMap = function(targetContainer) {
 			.attr('id', function(d, i) {
 				return d.id;
 			})
-			
-			
-			
-			
-			/*.style('fill', me.defaults.country.fill)
+			.style('fill', me.defaults.country.fill)
 			.style('stroke', me.defaults.country.stroke)
-			.style('stroke-width', me.defaults.country.strokeWidth)*/
+			.style('stroke-width', me.defaults.country.strokeWidth)
 			.attr('class', 'country')
 			.on('click', me.countryClickHandler);
 			
@@ -118,16 +114,19 @@ var zoomingWorldMap = function(targetContainer) {
  	 */
 	me.countryClickHandler = function(d, i) {
 		
-		// clicking on an opacity = 0 element: pass
+		// clicking on element w/ opacity = 0, then pass
 		if(d3.select(this).style('opacity') == 0) {
 			return;
 		}
 		
 		// zoom out on clicking active node
-		if(me.active.node() === this) { return me.resetMap(); }
+		if(me.active.node() === this) {
+			return me.resetMap();
+		}
 		
-		me.active.classed({'country': true, 'active': false});
-		me.active = d3.select(this).classed({'country': true, 'active': true});
+		// active is now "this"
+		me.active = d3.select(this);
+		me.active.style('fill', me.defaults.country.fillActive);
 		
 		var bounds = me.path.bounds(d),
 			dx = bounds[1][0] - bounds[0][0],
@@ -137,14 +136,14 @@ var zoomingWorldMap = function(targetContainer) {
 			scale = .9 / Math.max(dx/me.canvasWidth, dy/me.canvasHeight),
 			translate = [me.canvasWidth / 2 - scale * x, me.canvasHeight / 2 - scale * y];
 			
-		// change the stroke for all paths
+			
+		// change stroke width for all paths
 		me.gMap.selectAll('path')
 			.transition()
 			.duration(200)
-			.style('stroke-width', 1/ scale);
-			//.style('stroke-width', me.defaults.country.strokeWidth / scale);
+			.style('stroke-width', me.defaults.country.strokeWidth / scale);
 			
-		// zoom in
+		// zoom in, isolate to bounding box and fade others
 		me.gMap.transition()
 			.duration(750)
 			.attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
@@ -157,6 +156,9 @@ var zoomingWorldMap = function(targetContainer) {
 					})
 					.style('opacity', 0);
 			});
+			
+		// grid off
+		me.setGridDisabled(true);
 	}
 	
 	/**
@@ -164,7 +166,10 @@ var zoomingWorldMap = function(targetContainer) {
  	 * @description Reset map to full state
  	 */
 	me.resetMap = function() {
-		me.active.classed({'country': true, 'active': false});
+		// reset fill
+		me.active.style('fill', me.defaults.country.fill);
+		
+		// nullify active
 		me.active = d3.select(null);
 		
 		// zoom back out
@@ -176,10 +181,31 @@ var zoomingWorldMap = function(targetContainer) {
 		d3.selectAll('path.country')
 			.transition()
 			.duration(750)
+			.style('stroke-width', me.defaults.country.strokeWidth)
 			.style('opacity', 1);
+			
+		// grid back on
+		me.setGridDisabled(false);
 	}
-
+	
+	me.setGridDisabled = function(bool) {
+		if(bool) {
+			// off
+			me.gGrid.selectAll('path')
+				.transition()
+				.duration(500)
+				.style('opacity', 0);
+		} else {
+			me.gGrid.selectAll('path')
+				.transition()
+				.duration(500)
+				.style('opacity', 1);
+		
+		}
+	}
+	
 	/******************************
+	 * 
 	 *
 	 * SETTERS
 	 *
