@@ -17,6 +17,7 @@ var zoomingWorldMap = function(targetContainer) {
 	},
 	me.gGrid = null,
 	me.gMap = null,
+	me.gTitle = null,
 	me.graticule = d3.geo.graticule(),
 	me.heightOffset = 1,
 	me.path,
@@ -53,6 +54,12 @@ var zoomingWorldMap = function(targetContainer) {
 		me.gGrid = me.svg.append('svg:g');
 		
 		me.gMap = me.svg.append('svg:g');
+		
+		me.gTitle = me.svg.append('svg:g')
+			.attr('transform', 'translate(20, 20)')
+			.append('svg:text')
+			.attr('class', 'mapText')
+			.text('');
 		
 		d3.json(me.topoUrl, function(err, dat) {
 			if(err) { console.warn(err); return; }
@@ -101,6 +108,8 @@ var zoomingWorldMap = function(targetContainer) {
 			.attr('class', 'country')
 			.on('click', me.countryClickHandler);
 			
+		countrySelection.call(d3.helper.tooltip().text(me.tooltipFunction));
+			
 		// mesh
 		me.gMap.append('path')
 			.datum(me.topoMesh)
@@ -126,7 +135,10 @@ var zoomingWorldMap = function(targetContainer) {
 		
 		// active is now "this"
 		me.active = d3.select(this);
-		me.active.style('fill', me.defaults.country.fillActive);
+		me.active.style('fill', me.defaults.country.fillActive)
+			.style('opacity', 1);
+			
+		me.handleTitle(d.properties.name);
 		
 		var bounds = me.path.bounds(d),
 			dx = bounds[1][0] - bounds[0][0],
@@ -140,21 +152,22 @@ var zoomingWorldMap = function(targetContainer) {
 		// change stroke width for all paths
 		me.gMap.selectAll('path')
 			.transition()
-			.duration(200)
+			.duration(500)
 			.style('stroke-width', me.defaults.country.strokeWidth / scale);
 			
 		// zoom in, isolate to bounding box and fade others
 		me.gMap.transition()
-			.duration(750)
+			.duration(500)
 			.attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
 			.each('end', function() {
 				d3.selectAll('path.country')
 					.transition()
-					.duration(250)
+					.duration(500)
 					.filter(function(e, j) {
 						return d !== e;
 					})
-					.style('opacity', 0);
+					.style('fill', me.defaults.country.fill)
+					.style('opacity', .3);
 			});
 			
 		// grid off
@@ -172,15 +185,17 @@ var zoomingWorldMap = function(targetContainer) {
 		// nullify active
 		me.active = d3.select(null);
 		
+		me.handleTitle('');
+		
 		// zoom back out
 		me.gMap.transition()
-			.duration(750)
+			.duration(500)
 			.attr('transform', '');
 			
 		// revert opacity
 		d3.selectAll('path.country')
 			.transition()
-			.duration(750)
+			.duration(500)
 			.style('stroke-width', me.defaults.country.strokeWidth)
 			.style('opacity', 1);
 			
@@ -188,6 +203,10 @@ var zoomingWorldMap = function(targetContainer) {
 		me.setGridDisabled(false);
 	}
 	
+	/**
+ 	 * @function
+ 	 * @description Enable or disable the grid/equator
+ 	 */
 	me.setGridDisabled = function(bool) {
 		if(bool) {
 			// off
@@ -202,6 +221,10 @@ var zoomingWorldMap = function(targetContainer) {
 				.style('opacity', 1);
 		
 		}
+	}
+	
+	me.handleTitle = function(title) {
+		me.gTitle.text(title || '');
 	}
 	
 	/******************************

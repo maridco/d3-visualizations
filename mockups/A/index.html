@@ -8,10 +8,20 @@
 	<link rel="stylesheet" type="text/css" href="../../resources/bootstrap-3.3/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../../resources/css/vidual.css">
 	
+	<style type="text/css">
+		#vidualMap {
+	  		border:2px solid #000;
+	  		border-radius: 5px;
+	  		height:100%;
+	  		overflow:hidden;
+	  		background: #D6EBFF;
+		}
+	</style>
+	
 	<script type="text/javascript" src="../../resources/js/d3.min.js"></script>
 	<script type="text/javascript" src="../../resources/js/topojson.js"></script>
 	<script type="text/javascript" src="../../resources/js/tooltip.js"></script>
-	<script type="text/javascript" src="../../resources/js/reusableWorldMap.js"></script>
+	<script type="text/javascript" src="../../resources/js/zoomingWorldMap.js"></script>
 </head>
 <body>
 	
@@ -153,21 +163,10 @@
 	/**
  	 * initialize map
  	 */
-	var mapChart = new reusableWorldMap('vidualMap');
+	var mapChart = new zoomingWorldMap('vidualMap');
 	mapChart.setTopoUrl('../../resources/data/world-topo-min.json')
 		.setTooltipFunction(function(d, i) {
 			return d.properties.name;
-		})
-		.setWidthOffset(.98)
-		.setHeightOffset(.98)
-		.setDefaults({
-			country: {
-				fill: '#B8C3E3',
-				fillOver: '#FF8C00',
-				stroke: 'none',
-				strokeWidth: 1,
-				strokeOver: '#555'
-			}
 		})
 		.initChart();
 </script>

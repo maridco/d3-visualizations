@@ -46,3 +46,39 @@ body {
 
 .panel-search-results .panel-title {
 	font-weight: bold;
+}
+
+/**
+ * map CSS
+ */
+.background {
+	fill: none;
+	pointer-events: all;
+}
+
+.country {
+	cursor: pointer;
+}
+
+.equator {
+	stroke: #555;
+	stroke-width: 1;
+}
+	
+.graticule {
+	fill: none;
+	stroke: #CCC;
+	stroke-width: .5,
+	stroke-opacity: .5
+}
+
+.mapText {
+	font-family: sans-serif;
+}
+	
+.mesh {
+		fill: none;
+/*		stroke: #fff;
+		stroke-linecap: round;
+		stroke-linejoin: round;*/
+}
