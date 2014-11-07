@@ -1,0 +1,84 @@
+/**
+ * bootstrap overrides
+ */
+body {
+  padding-top: 50px;
+}
+
+#vidualMap {
+	border: solid 1px #A7A7A7;
+	border-radius: 3px;
+	width: 97%;
+}
+
+.btn-default .badge {
+	background-color: #906;
+}
+
+.form-group label {
+	color: #990066;
+}
+
+.navbar-vidual-primary {
+	border-color: #A7A7A7;
+	background-color: #DDDDDD;
+}
+
+.navbar-vidual-secondary {
+	background-color: white;
+	border: 0px;
+	font-size: 12px;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: #555;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	background-color: #FF8C00;
+	color: white;
+	border-radius: 4px;
+}
+
+.panel-search-results {
+	margin-top: 10px;
+}
+
+.panel-search-results .panel-title {
+	font-weight: bold;
+}
+
+/**
+ * map CSS
+ */
+.background {
+	fill: none;
+	pointer-events: all;
+}
+
+.country {
+	cursor: pointer;
+}
+
+.equator {
+	stroke: #555;
+	stroke-width: 1;
+}
+	
+.graticule {
+	fill: none;
+	stroke: #CCC;
+	stroke-width: .5,
+	stroke-opacity: .5
+}
+
+.mapText {
+	font-family: sans-serif;
+}
+	
+.mesh {
+		fill: none;
+/*		stroke: #fff;
+		stroke-linecap: round;
+		stroke-linejoin: round;*/
+}

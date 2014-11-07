@@ -9,18 +9,21 @@ var reusableWorldMap = function(targetContainer) {
 	me.defaults = {
 		country: {
 			fill: '#BBB',
+			fillOver: '#BBB',
 			stroke: 'none',
 			strokeWidth: 1,
 			strokeOver: 'white'
 		}
 	},
 	me.graticule = d3.geo.graticule(),
+	me.heightOffset = 1,
 	me.path,
 	me.projection,
 	me.svg,
 	me.tooltipFunction = function(d, i) { return 'tooltip'; },
 	me.topo,
 	me.topoUrl,
+	me.widthOffset = 1,
 	me.zoom;
 		
 	/**
@@ -37,8 +40,8 @@ var reusableWorldMap = function(targetContainer) {
 
 		me.svg = d3.select('#' + targetContainer)
 			.append('svg')
-			.attr('width', me.canvasWidth)
-			.attr('height', me.canvasHeight);
+			.attr('width', me.canvasWidth * me.widthOffset)
+			.attr('height', me.canvasHeight * me.heightOffset);
 		
 		me.g = me.svg.append('svg:g');
 		
@@ -91,10 +94,12 @@ var reusableWorldMap = function(targetContainer) {
 			.style('stroke-width', me.defaults.country.strokeWidth)
 			.on('mouseover', function(d, i) {
 				d3.select(this)
+					.style('fill', me.defaults.country.fillOver)
 					.style('stroke', me.defaults.country.strokeOver);
 			})
 			.on('mouseout', function(d, i) {
 				d3.select(this)
+					.style('fill', me.defaults.country.fill)
 					.style('stroke', me.defaults.country.stroke);
 			});
 			//.on('dblclick', me.dblClickHandler);
@@ -171,6 +176,16 @@ var reusableWorldMap = function(targetContainer) {
 	 *
 	 *
 	 ******************************/
+	me.setDefaults = function(obj) {
+		me.defaults = obj;
+		return me;
+	},
+	
+	me.setHeightOffset = function(offset) {
+		me.heightOffset = offset;
+		return me;
+	}
+	
 	me.setTooltipFunction = function(fn) {
 		me.tooltipFunction = fn;
 		return me;
@@ -178,6 +193,11 @@ var reusableWorldMap = function(targetContainer) {
 	
 	me.setTopoUrl = function(url) {
 		me.topoUrl = url;
+		return me;
+	}
+	
+	me.setWidthOffset = function(offset) {
+		me.widthOffset = offset;
 		return me;
 	}
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>World (3)</title>
+	<style>
+	body  {
+    	margin: 0; 
+		padding: 0;
+		text-align: center;
+	}
+	
+	#controls {
+		margin: 0 auto;
+		clear: both;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
+	#container {
+	  margin:10px 10%;
+	  border:2px solid #000;
+	  border-radius: 5px;
+	  height:100%;
+	  overflow:hidden;
+	  background: #D6EBFF;
+	  /*background: #F0F8FF;*/
+	}
+	
+	.background {
+		fill: none;
+		pointer-events: all;
+	}
+	
+	.country {
+		cursor: pointer;
+	}
+	
+	.equator {
+		stroke: #555;
+		stroke-width: 1;
+	}
+	
+	.graticule {
+		fill: none;
+		stroke: #CCC;
+		stroke-width: .5,
+		stroke-opacity: .5
+	}
+	
+	.mesh {
+		fill: none;
+/*		stroke: #fff;
+		stroke-linecap: round;
+		stroke-linejoin: round;*/
+	}
+	
+	.text {
+		font: 9px/1.1 sans-serif;
+	}
+	</style>
+	<script type="text/javascript" src="../../resources/js/d3.min.js"></script>
+	<script type="text/javascript" src="../../resources/js/topojson.js"></script>
+	<script type="text/javascript" src="../../resources/js/tooltip.js"></script>
+	<script type="text/javascript" src="../../resources/js/zoomingWorldMap.js"></script>
+</head>
+<body>
+	<div id="container"></div>
+</body>
+<script>
+	/**
+ 	 * initialize map
+ 	 */
+	var mapChart = new zoomingWorldMap('container');
+	mapChart.setTopoUrl('../../resources/data/world-topo-min.json')
+		.setTooltipFunction(function(d, i) {
+			return d.properties.name;
+		})
+		.initChart();
+		
+</script>
+</html>
