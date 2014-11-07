@@ -137,9 +137,7 @@ function draw(topo) {
         tooltip.classed("hidden", true);
       }); 
 
-
   d3.csv("../../resources/data/performers.csv", function(err, artists) {
-
     artists.forEach(function(i){
       addpoint(i.PerformerLongitude, i.PerformerLatitude, i.PerformerName);
     });
